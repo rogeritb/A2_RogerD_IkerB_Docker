@@ -77,6 +77,6 @@ Si es necessari redireccionar ports a VirtualBox:
    - Port invitau: 5901
 
 CRÈDITS:
-Projecte desenvolupat per [El teu nom]
+Projecte desenvolupat per Roger i Iker
 Curs ASIX 2024
-Centre: [Nom del teu centre]
+Centre: ITB Barcelona
