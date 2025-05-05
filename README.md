@@ -1,4 +1,4 @@
-DOCKER GUI - ENTORN DE DESENVOLUPAMENT AMB XFCE
+# DOCKER GUI - ENTORN DE DESENVOLUPAMENT AMB XFCE
 
 Aquest projecte crea un contenidor Docker amb Ubuntu 24.04 que inclou:
 - Entorn gràfic XFCE
@@ -7,13 +7,13 @@ Aquest projecte crea un contenidor Docker amb Ubuntu 24.04 que inclou:
 - Python 3
 - Servidor SSH
 
-REQUERIMENTS PREVIS:
+## REQUERIMENTS PREVIS:
 - Docker instal·lat
 - Client VNC (Recomanat Remmina)
 - Mínim 4GB de RAM
 - 10GB d'espai lliure
 
-INSTRUCCIONS D'INSTAL·LACIÓ:
+## INSTRUCCIONS D'INSTAL·LACIÓ:
 
 1. Descarregar el projecte:
 git clone https://github.com/el-teu-repo/docker-gui-project.git
@@ -30,21 +30,21 @@ docker run -d \
   --security-opt seccomp=unconfined \
   ubuntu-xfce-vnc
 
-CONFIGURACIÓ DELS PORTS:
+## CONFIGURACIÓ DELS PORTS:
 - 5901: Port per a VNC
 - 2222: Port per a SSH (redireccionat al port 22 del contenidor)
 
-CONNEXIÓ AMB VNC:
+## CONNEXIÓ AMB VNC:
 1. Obrir el client Remmina
 2. Seleccionar protocol VNC
 3. Introduir adreça: localhost:5901
 4. Contrasenya: password (per defecte)
 
-ACCÉS PER SSH:
+## ACCÉS PER SSH:
 ssh -p 2222 developer@localhost
 Contrasenya: developer
 
-CONFIGURACIÓ ADDICIONAL:
+## CONFIGURACIÓ ADDICIONAL:
 
 Per canviar la contrasenya de VNC:
 1. Editar el Dockerfile:
@@ -55,13 +55,13 @@ Per canviar la contrasenya de VNC:
 Per instal·lar extensions a VSCode:
 docker exec -it gui-container code --install-extension EXTENSIO_ID
 
-ESTRUCTURA DEL PROJECTE:
+## ESTRUCTURA DEL PROJECTE:
 .
-├── Dockerfile
-├── README.txt
-└── start_vnc.sh
+  Dockerfile
+  README.txt
+  start_vnc.sh
 
-SOLUCIÓ DE PROBLEMES:
+## SOLUCIÓ DE PROBLEMES:
 
 Si la connexió VNC falla:
 1. Verificar que el contenidor està executant-se:
@@ -76,7 +76,7 @@ Si es necessari redireccionar ports a VirtualBox:
    - Port host: 5901
    - Port invitau: 5901
 
-CRÈDITS:
+## CRÈDITS:
 Projecte desenvolupat per Roger i Iker
 Curs ASIX 2024
 Centre: ITB Barcelona
