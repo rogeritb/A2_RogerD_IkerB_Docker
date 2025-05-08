@@ -11,8 +11,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Configuració
-IMAGE_NAME="asix-gui-definitiu"
-CONTAINER_NAME="asix-gui-container"
+IMAGE_NAME="asix-gui-RDIB_definitiu"
+CONTAINER_NAME="asix-gui-RDIB-container"
 VNC_PORT=5901
 SSH_PORT=2222
 VNC_PASSWORD="developer"  # Canviar en entorns reals
@@ -67,13 +67,13 @@ docker ps -f "name=$CONTAINER_NAME" --format "table {{.ID}}\t{{.Names}}\t{{.Stat
 # 5. Informació de connexió
 echo -e "\n\e[1;35m======================================================="
 echo "           CREDENCIALS D'ACCÉS"
-echo "=======================================================\e[0m"
-echo -e "VNC (Remmina):"
+echo -e "\e[1;35m=======================================================\e[0m"
+echo -e "\e[1;33mVNC (Remmina):\e[0m"
 echo "  Adreça: localhost:$VNC_PORT"
 echo "  Usuari: developer"
 echo "  Contrasenya: $VNC_PASSWORD"
 echo ""
-echo -e "SSH:"
+echo -e "\e[1;33mSSH:\e[0m"
 echo "  Comanda: ssh -p $SSH_PORT developer@localhost\e[0m"
 echo "  Contrasenya: developer"
 echo ""
