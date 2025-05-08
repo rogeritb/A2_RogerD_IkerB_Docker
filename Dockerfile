@@ -1,90 +1,85 @@
 # ========================================================
 # Dockerfile per a Entorn GUI amb XFCE, VNC i SSH
-# Versió 100% funcional - ASIXcC ITB
+# ASIXcC ITB
 # ========================================================
 
+# Use Ubuntu 24.04 as base image
 FROM ubuntu:24.04
 
-# Variables d'entorn
-ENV DEBIAN_FRONTEND=noninteractive \
-    TZ=Europe/Madrid \
-    USER=developer \
-    VNC_PASSWD=developer \
-    VNC_DISPLAY=:1 \
-    VNC_RESOLUTION=1280x800 \
-    DISPLAY=:1
-
-# 1. Actualització i paquets bàsics
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends \
-        apt-utils \
-        ca-certificates \
-        locales \
-        tzdata \
-    && rm -rf /var/lib/apt/lists/* && \
-    localedef -i ca_ES -c -f UTF-8 -A /usr/share/locale/locale.alias ca_ES.UTF-8
-
-# 2. Instal·lació de l'entorn complet (amb TigerVNC)
-RUN apt-get update && \
-    apt-get install -y \
-        xfce4 \
-        xfce4-goodies \
-        tigervnc-standalone-server \
-        tigervnc-common \
-        openssh-server \
-        sudo \
-        wget \
-        curl \
-        git \
-        nano \
-        net-tools \
-        iputils-ping \
-        python3 \
-        python3-pip \
-        expect \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# 3. Instal·lació de Visual Studio Code
-RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg && \
-    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list && \
-    apt-get update && \
-    apt-get install -y code && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# 4. Configuració de l'usuari
-RUN useradd -m -s /bin/bash ${USER} && \
-    echo "${USER}:${VNC_PASSWD}" | chpasswd && \
-    usermod -aG sudo ${USER} && \
-    mkdir -p /home/${USER}/.vnc && \
-    chown -R ${USER}:${USER} /home/${USER}
-
-# 5. Configuració de VNC
-COPY set_vnc_password.exp /tmp/
-RUN chmod +x /tmp/set_vnc_password.exp && \
-    /tmp/set_vnc_password.exp ${USER} ${VNC_PASSWD} && \
-    echo -e "#!/bin/sh\nunset SESSION_MANAGER\nexec /usr/bin/xfce4-session" > /home/${USER}/.vnc/xstartup && \
-    chmod +x /home/${USER}/.vnc/xstartup && \
-    rm /tmp/set_vnc_password.exp
-
-# 6. Configuració de SSH (corregida)
-RUN mkdir -p /var/run/sshd && \
-    sed -i 's/#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
-    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-    sed -i 's/#X11Forwarding.*/X11Forwarding yes/' /etc/ssh/sshd_config && \
-    echo "AllowUsers ${USER}" >> /etc/ssh/sshd_config && \
-    ssh-keygen -A
-
-# 7. Comanda d'inici (corregida)
-CMD bash -c "sudo -u ${USER} vncserver ${VNC_DISPLAY} -geometry ${VNC_RESOLUTION} -depth 24 -localhost no -SecurityTypes=VncAuth -PasswordFile=/home/${USER}/.vnc/passwd && \
-    /usr/sbin/sshd -D"
-
-# Exposició de ports
-EXPOSE 22 5901
-
+# ========================================================
 # Metadades
+# ========================================================
 LABEL maintainer="Roger Domingo & Iker Blazquez"
 LABEL version="5.0"
-LABEL description="Entorn GUI amb XFCE, VNC i SSH - Versió definitiva"
+LABEL description="Entorn GUI amb XFCE, VNC i SSH"
+
+# Configuració bàsica
+ENV DEBIAN_FRONTEND=noninteractive
+ENV USER=root
+ENV RESOLUTION=1920x1080
+ENV VNC_PASSWORD=password
+ENV SSH_PASSWORD=password
+
+# Instal·lació de paquets bàsics
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    wget \
+    gnupg \
+    git \
+    sudo \
+    openssh-server \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instal·lació de l'entorn gràfic
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xfce4 \
+    xfce4-goodies \
+    tightvncserver \
+    dbus-x11 \
+    xfonts-base \
+    x11-apps \
+    xterm \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instal·lació de Visual Studio Code
+RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg \
+    && install -D -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/ \
+    && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list' \
+    && apt-get update \
+    && apt-get install -y code \
+    && rm -f packages.microsoft.gpg
+
+# Instal·lació de Python
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python3-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Configuració del servidor SSH
+RUN mkdir /var/run/sshd \
+    && echo "root:$SSH_PASSWORD" | chpasswd \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config \
+    && ssh-keygen -A
+
+# Configuració del servidor VNC
+RUN mkdir -p /root/.vnc \
+    && echo "$VNC_PASSWORD" | vncpasswd -f > /root/.vnc/passwd \
+    && chmod 600 /root/.vnc/passwd \
+    && touch /root/.Xauthority
+
+# Creació del script d'inici
+COPY start-vnc.sh /app/start-vnc.sh
+RUN chmod +x /app/start-vnc.sh
+
+# Configuració dels ports
+EXPOSE 5901 22
+
+# Directori de treball
+WORKDIR /app
+
+# Entrada
+ENTRYPOINT ["/app/start-vnc.sh"]

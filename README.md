@@ -40,19 +40,22 @@ Autors: Roger Domingo & Iker Blazquez
 ## INSTRUCCIONS D'INSTAL·LACIÓ I EXECUCIÓ
 --------------------------------------
 
+0. Recorda en donar permisos d'execució als fitxers .sh
+   chmod +x *.sh
+
 1. CONSTRUIR LA IMATGE DOCKER:
    Executeu des del directori que conté el Dockerfile:
    
-   docker build -t asix-gui-rdib .
+   docker build -t ubuntu-xfce-vnc .
 
 2. INICIAR EL CONTENIDOR:
    docker run -d \
-     -p 5901:5901 \    # Port VNC
-     -p 2222:22 \      # Port SSH
-     --name asix-gui-rdib-container \
-     asix-gui-rdib
+  -p 5901:5901 \
+  -p 2222:22 \
+  --name my-gui-env \
+  ubuntu-xfce-vnc
 
-   Opcions:
+   Opcions que hem trobat:
    - Podeu canviar els ports mapejant a altres ports locals
    - Podeu afegir -e VNC_PASSWORD=noupassword per canviar contrasenya
    - Podeu mapejar directoris amb -v /ruta/local:/app
