@@ -29,8 +29,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Configuració
-CONTAINER_NAME="asix-gui-RDIB-container"
-IMAGE_NAME="asix-gui-RDIB"
+CONTAINER_NAME="asix-gui-rdib-container"
+IMAGE_NAME="asix-gui-rdib"
 
 # 1. Aturar el contenidor
 echo -e "${YELLOW}[INFO] Aturant el contenidor...${NC}"

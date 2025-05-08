@@ -11,8 +11,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Configuració
-IMAGE_NAME="asix-gui-RDIB"
-CONTAINER_NAME="asix-gui-RDIB-container"
+IMAGE_NAME="asix-gui-rdib"
+CONTAINER_NAME="asix-gui-rdib-container"
 VNC_PORT=5901
 SSH_PORT=2222
 VNC_PASSWORD="developer"  # Canviar en entorns reals
