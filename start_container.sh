@@ -11,7 +11,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Configuració
-IMAGE_NAME="asix-gui-RDIB_definitiu"
+IMAGE_NAME="asix-gui-RDIB"
 CONTAINER_NAME="asix-gui-RDIB-container"
 VNC_PORT=5901
 SSH_PORT=2222

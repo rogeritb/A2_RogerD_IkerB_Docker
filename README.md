@@ -16,8 +16,8 @@ Aquest projecte crea un entorn grafic Ubuntu 24.04 amb escriptori XFCE accessibl
 ## Instal·lacio
 -----------
 1. Clona el repositori:
-   git clone [URL_DEL_REPO]
-   cd [DIRECTORI_DEL_PROJECTE]
+   git clone https://github.com/rogeritb/A2_RogerD_IkerB_Docker.git
+   cd practica2_RogerD_IkerB
 
 2. Dona permisos d'execucio:
    chmod +x start_container.sh stop_container.sh set_vnc_password.exp
@@ -42,10 +42,10 @@ Contrasenya: developer
   sudo ./stop_container.sh
   
 - Reiniciar serveis:
-  docker exec asix-gui-container sudo service ssh restart
+  docker exec asix-gui-RDIB-container sudo service ssh restart
 
 - Veure logs:
-  docker logs asix-gui-container
+  docker logs asix-gui-RDIB-container
 
 ## Notes Importants
 ---------------
